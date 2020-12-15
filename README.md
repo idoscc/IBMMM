@@ -17,3 +17,22 @@
 注：VMESS默认的alterId为64
 
 本项目基于P3TERX项目修改而来，感谢P3TERX
+
+配置 Cloudflare 高速节点中转
+这部分不配置也可以直接连 应用程序域名 使用, 就是有点慢.
+
+注册并登录https://www.cloudflare.com/
+点击 Workers
+点击 创建Worker
+在脚本位置加入下面这段, url.hostname修改为对应的 应用程序域名.
+addEventListener(
+  "fetch",event => {
+    let url=new URL(event.request.url);
+    url.hostname="ibmyes.us-south.cf.appdomain.cloud";
+    let request=new Request(url,event.request);
+    event.respondWith(
+      fetch(request)
+    )
+  }
+)
+点击保存并部署, 这里会给一个网址(比如cloudflare_workers.dev), 这个就是 v2ray 客户端要连的地址.
